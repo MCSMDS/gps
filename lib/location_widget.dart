@@ -16,7 +16,6 @@ class _LocationState extends State<CurrentLocationWidget2> {
     _initCurrentLocation();
   }
 
-/*
   @override
   void didUpdateWidget(Widget oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -25,7 +24,7 @@ class _LocationState extends State<CurrentLocationWidget2> {
     });
     _initCurrentLocation();
   }
-*/
+
   _initCurrentLocation() {
     Geolocator()
       ..forceAndroidLocationManager = true
