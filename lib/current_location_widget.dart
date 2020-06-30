@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import '../common_widgets/placeholder_widget.dart';
+import 'placeholder_widget.dart';
 
 class CurrentLocationWidget extends StatefulWidget {
   @override
@@ -19,14 +19,16 @@ class _LocationState extends State<CurrentLocationWidget> {
   _initCurrentLocation() async {
     Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
     Position position = await geolocator.getCurrentPosition();
-    setState(() => _currentPosition = position);
+    if (mounted) {
+      setState(() => _currentPosition = position);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('地理定位器示例应用程序'),
+        title: Text('GPS'),
       ),
       body: FutureBuilder<GeolocationStatus>(
         future: Geolocator().checkGeolocationPermissionStatus(),
