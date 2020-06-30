@@ -54,11 +54,19 @@ class LocationStreamState extends State<LocationStreamWidget> {
 
   Widget _buildListView() {
     List<Widget> listItems = <Widget>[];
-    listItems.addAll(_positions
-        .map((Position position) => ListTile(
-            title: Text(
-                '${position.latitude} ${position.longitude} ${position.timestamp.toLocal().toString()}')))
-        .toList());
+    listItems.addAll(_positions.map(
+      (Position position) {
+        return ListTile(
+          title: Column(
+            children: <Widget>[
+              Text('${position.latitude}'),
+              Text('${position.longitude}'),
+              Text('${position.timestamp.toLocal().toString()}'),
+            ],
+          ),
+        );
+      },
+    ).toList());
     return ListView(
       children: listItems,
     );
