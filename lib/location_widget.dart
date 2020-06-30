@@ -1,7 +1,4 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 
 import 'placeholder_widget.dart';
@@ -12,47 +9,21 @@ class CurrentLocationWidget2 extends StatefulWidget {
 }
 
 class _LocationState extends State<CurrentLocationWidget2> {
-  Position _lastKnownPosition;
   Position _currentPosition;
 
   @override
   void initState() {
     super.initState();
-
-    _initLastKnownLocation();
     _initCurrentLocation();
   }
 
   @override
   void didUpdateWidget(Widget oldWidget) {
     super.didUpdateWidget(oldWidget);
-
     setState(() {
-      _lastKnownPosition = null;
       _currentPosition = null;
     });
-
-    _initLastKnownLocation().then((_) => _initCurrentLocation());
-  }
-
-  Future<void> _initLastKnownLocation() async {
-    Position position;
-    try {
-      final Geolocator geolocator = Geolocator()
-        ..forceAndroidLocationManager = true;
-      position = await geolocator.getLastKnownPosition(
-          desiredAccuracy: LocationAccuracy.best);
-    } on PlatformException {
-      position = null;
-    }
-
-    if (!mounted) {
-      return;
-    }
-
-    setState(() {
-      _lastKnownPosition = position;
-    });
+    _initCurrentLocation();
   }
 
   _initCurrentLocation() {
@@ -82,31 +53,11 @@ class _LocationState extends State<CurrentLocationWidget2> {
           }
 
           if (snapshot.data == GeolocationStatus.denied) {
-            return const PlaceholderWidget('Access to location denied',
-                'Allow access to the location services for this App using the device settings.');
+            return PlaceholderWidget('拒绝访问位置', '允许使用设备设置访问此应用的位置服务。');
           }
 
           return Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 32,
-                    vertical: 16,
-                  ),
-                  child: Text(
-                    'Geolocator is using the raw location manager classes shipped with the operating system.',
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                PlaceholderWidget(
-                    'Last known location:', _lastKnownPosition.toString()),
-                PlaceholderWidget(
-                    'Current location:', _currentPosition.toString()),
-              ],
-            ),
+            child: PlaceholderWidget('当前位置：', _currentPosition.toString()),
           );
         },
       ),
