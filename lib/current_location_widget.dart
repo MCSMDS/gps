@@ -8,20 +8,19 @@ class CurrentLocationWidget extends StatefulWidget {
 }
 
 class _LocationState extends State<CurrentLocationWidget> {
-  String _currentPosition;
+  Position _currentPosition;
 
   @override
   void initState() {
-    _initCurrentLocation();
     super.initState();
+    _initCurrentLocation();
   }
 
   _initCurrentLocation() async {
     Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
     Position position = await geolocator.getCurrentPosition();
-    String locate = position.toString();
     if (mounted) {
-      setState(() => _currentPosition = locate);
+      setState(() => _currentPosition = position);
     }
   }
 
@@ -44,7 +43,7 @@ class _LocationState extends State<CurrentLocationWidget> {
           }
 
           return Center(
-            child: PlaceholderWidget('当前位置：', _currentPosition),
+            child: PlaceholderWidget('当前位置：', _currentPosition.toString()),
           );
         },
       ),

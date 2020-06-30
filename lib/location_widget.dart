@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-
 import 'placeholder_widget.dart';
 
 class CurrentLocationWidget2 extends StatefulWidget {
@@ -17,6 +16,7 @@ class _LocationState extends State<CurrentLocationWidget2> {
     _initCurrentLocation();
   }
 
+/*
   @override
   void didUpdateWidget(Widget oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -25,16 +25,12 @@ class _LocationState extends State<CurrentLocationWidget2> {
     });
     _initCurrentLocation();
   }
-
+*/
   _initCurrentLocation() {
     Geolocator()
       ..forceAndroidLocationManager = true
-      ..getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.medium,
-      ).then((position) {
-        if (mounted) {
-          setState(() => _currentPosition = position);
-        }
+      ..getCurrentPosition().then((position) {
+        setState(() => _currentPosition = position);
       });
   }
 
