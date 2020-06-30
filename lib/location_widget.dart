@@ -29,7 +29,9 @@ class _LocationState extends State<CurrentLocationWidget2> {
     Geolocator()
       ..forceAndroidLocationManager = true
       ..getCurrentPosition().then((position) {
-        setState(() => _currentPosition = position);
+        if (mounted) {
+          setState(() => _currentPosition = position);
+        }
       });
   }
 
