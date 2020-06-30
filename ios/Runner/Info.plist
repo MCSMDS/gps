@@ -42,10 +42,10 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>NSLocationWhenInUseUsageDescription</key>
-  <string>This app needs access to location when open.</string>
+  <string>此应用程序打开时需要访问位置。</string>
   <key>NSLocationAlwaysUsageDescription</key>
-  <string>This app needs access to location when in the background.</string>
+  <string>此应用程序在后台时需要访问位置。</string>
   <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-  <string>This app needs access to location when open and in the background.</string>
+  <string>此应用程序在后台打开时需要访问位置。</string>
 </dict>
 </plist>

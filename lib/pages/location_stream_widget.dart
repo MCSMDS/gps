@@ -12,33 +12,19 @@ class LocationStreamState extends State<LocationStreamWidget> {
   StreamSubscription<Position> _positionStreamSubscription;
   final List<Position> _positions = <Position>[];
 
-  void _toggleListening() {
-    if (_positionStreamSubscription == null) {
-      const LocationOptions locationOptions =
-          LocationOptions(accuracy: LocationAccuracy.best);
-      final Stream<Position> positionStream =
-          Geolocator().getPositionStream(locationOptions);
-      _positionStreamSubscription = positionStream.listen(
-          (Position position) => setState(() => _positions.add(position)));
-      _positionStreamSubscription.pause();
-    }
-
-    setState(() {
-      if (_positionStreamSubscription.isPaused) {
-        _positionStreamSubscription.resume();
-      } else {
-        _positionStreamSubscription.pause();
-      }
-    });
+  @override
+  void initState() {
+    Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
+    Stream<Position> stream = geolocator.getPositionStream();
+    _positionStreamSubscription = stream.listen(
+        (Position position) => setState(() => _positions.add(position)));
+    super.initState();
   }
 
   @override
   void dispose() {
-    if (_positionStreamSubscription != null) {
-      _positionStreamSubscription.cancel();
-      _positionStreamSubscription = null;
-    }
-
+    _positionStreamSubscription.cancel();
+    _positionStreamSubscription = null;
     super.dispose();
   }
 
@@ -67,82 +53,14 @@ class LocationStreamState extends State<LocationStreamWidget> {
   }
 
   Widget _buildListView() {
-    final List<Widget> listItems = <Widget>[
-      ListTile(
-        title: RaisedButton(
-          child: _buildButtonText(),
-          color: _determineButtonColor(),
-          padding: const EdgeInsets.all(8.0),
-          onPressed: _toggleListening,
-        ),
-      ),
-    ];
-
+    List<Widget> listItems = <Widget>[];
     listItems.addAll(_positions
-        .map((Position position) => PositionListItem(position))
+        .map((Position position) => ListTile(
+            title: Text(
+                '${position.latitude} ${position.longitude} ${position.timestamp.toLocal().toString()}')))
         .toList());
-
     return ListView(
       children: listItems,
-    );
-  }
-
-  bool _isListening() => !(_positionStreamSubscription == null ||
-      _positionStreamSubscription.isPaused);
-
-  Widget _buildButtonText() {
-    return Text(_isListening() ? '别听了' : '开始倾听');
-  }
-
-  Color _determineButtonColor() {
-    return _isListening() ? Colors.red : Colors.green;
-  }
-}
-
-class PositionListItem extends StatefulWidget {
-  const PositionListItem(this._position);
-
-  final Position _position;
-
-  @override
-  State<PositionListItem> createState() => PositionListItemState(_position);
-}
-
-class PositionListItemState extends State<PositionListItem> {
-  PositionListItemState(this._position);
-  final Position _position;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      title: Row(
-        children: <Widget>[
-          Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  'Lat: ${_position.latitude}',
-                  style: const TextStyle(fontSize: 16.0, color: Colors.black),
-                ),
-                Text(
-                  'Lon: ${_position.longitude}',
-                  style: const TextStyle(fontSize: 16.0, color: Colors.black),
-                ),
-              ]),
-          Expanded(
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    _position.timestamp.toLocal().toString(),
-                    style: const TextStyle(fontSize: 14.0, color: Colors.grey),
-                  )
-                ]),
-          ),
-        ],
-      ),
     );
   }
 }
