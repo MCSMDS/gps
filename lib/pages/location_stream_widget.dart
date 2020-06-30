@@ -44,20 +44,26 @@ class LocationStreamState extends State<LocationStreamWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<GeolocationStatus>(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('地理定位器示例应用程序'),
+      ),
+      body: FutureBuilder<GeolocationStatus>(
         future: Geolocator().checkGeolocationPermissionStatus(),
         builder:
             (BuildContext context, AsyncSnapshot<GeolocationStatus> snapshot) {
           if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
+            return Center(child: CircularProgressIndicator());
           }
 
           if (snapshot.data == GeolocationStatus.denied) {
-            return const PlaceholderWidget('位置服务已禁用', '使用设备设置为此应用启用位置服务。');
+            return PlaceholderWidget('位置服务已禁用', '使用设备设置为此应用启用位置服务。');
           }
 
           return _buildListView();
-        });
+        },
+      ),
+    );
   }
 
   Widget _buildListView() {

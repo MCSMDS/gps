@@ -33,21 +33,27 @@ class _LocationState extends State<CurrentLocationWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<GeolocationStatus>(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('地理定位器示例应用程序'),
+      ),
+      body: FutureBuilder<GeolocationStatus>(
         future: Geolocator().checkGeolocationPermissionStatus(),
         builder:
             (BuildContext context, AsyncSnapshot<GeolocationStatus> snapshot) {
           if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
+            return Center(child: CircularProgressIndicator());
           }
 
           if (snapshot.data == GeolocationStatus.denied) {
-            return const PlaceholderWidget('拒绝访问位置', '允许使用设备设置访问此应用的位置服务。');
+            return PlaceholderWidget('拒绝访问位置', '允许使用设备设置访问此应用的位置服务。');
           }
 
           return Center(
             child: PlaceholderWidget('当前位置：', _currentPosition.toString()),
           );
-        });
+        },
+      ),
+    );
   }
 }
