@@ -1,0 +1,64 @@
+name: Flutter
+
+on: push
+
+jobs:
+  build-ios:
+    name: Build iOS
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.3.1
+      - name: Flutter action
+        uses: subosito/flutter-action@v1.3.2
+      - name: Build IOS
+        run: |
+          flutter build ios --release --no-codesign
+          mkdir Payload
+          mv build/ios/iphoneos/Runner.app Payload
+          zip -r Runner.ipa Payload
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ipa
+          path: Runner.ipa
+
+  build-apk:
+    name: Build APK
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.3.1
+      - name: Flutter action
+        uses: subosito/flutter-action@v1.3.2
+      - name: Build APK
+        run: |
+          flutter build apk
+          mv build/app/outputs/apk/release/app-release.apk app-release.apk
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: apk
+          path: app-release.apk
+
+  create-release:
+    name: Create Release
+    runs-on: windows-latest
+    needs: 
+      - build-ios
+      - build-apk
+    steps:
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v2
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ github.run_number }}
+          artifacts: "ipa/Runner.ipa,apk/app-release.apk"
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Delete Artifact
+        uses: GeekyEggo/delete-artifact@v1.0.0
+        with:
+          name: |
+            ipa
+            apk
