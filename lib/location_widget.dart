@@ -35,7 +35,6 @@ class _LocationState extends State<CurrentLocationWidget2> {
     _initLastKnownLocation().then((_) => _initCurrentLocation());
   }
 
-
   Future<void> _initLastKnownLocation() async {
     Position position;
     try {
@@ -56,7 +55,6 @@ class _LocationState extends State<CurrentLocationWidget2> {
     });
   }
 
-
   _initCurrentLocation() {
     Geolocator()
       ..forceAndroidLocationManager = true
@@ -71,7 +69,11 @@ class _LocationState extends State<CurrentLocationWidget2> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<GeolocationStatus>(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('GPS'),
+      ),
+      body: FutureBuilder<GeolocationStatus>(
         future: Geolocator().checkGeolocationPermissionStatus(),
         builder:
             (BuildContext context, AsyncSnapshot<GeolocationStatus> snapshot) {
@@ -95,7 +97,7 @@ class _LocationState extends State<CurrentLocationWidget2> {
                     vertical: 16,
                   ),
                   child: Text(
-                     'Geolocator is using the raw location manager classes shipped with the operating system.',
+                    'Geolocator is using the raw location manager classes shipped with the operating system.',
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -106,8 +108,8 @@ class _LocationState extends State<CurrentLocationWidget2> {
               ],
             ),
           );
-        });
+        },
+      ),
+    );
   }
-
-
 }
