@@ -24,9 +24,10 @@ class _LocationState extends State<CurrentLocationWidget> {
 
   void addtLocation() async {
     Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
-    Position newposition = await geolocator.getCurrentPosition();
-    if (positions.last.longitude == newposition.longitude ||
-        positions.last.latitude == newposition.latitude ||
+    Position newposition = await geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.medium);
+    if (positions.last.longitude == newposition.longitude &&
+        positions.last.latitude == newposition.latitude &&
         positions.last.altitude == newposition.altitude) return;
     setState(() => positions.add(newposition));
   }
@@ -71,8 +72,8 @@ class _LocationState extends State<CurrentLocationWidget> {
       return ListTile(
         title: Row(
           children: <Widget>[
-            Text('经度: ${position.longitude}'),
-            Text('纬度: ${position.latitude}'),
+            Text('经度: ${dd2dms(position.longitude)}'),
+            Text('纬度: ${dd2dms(position.latitude)}'),
             Text('海拔: ${position.altitude}'),
             Text('时间: ${position.timestamp.toLocal().toString()}'),
           ],
@@ -80,5 +81,12 @@ class _LocationState extends State<CurrentLocationWidget> {
       );
     }).toList());
     return ListView(children: item);
+  }
+
+  String dd2dms(double number) {
+    int du = number.toInt();
+    int feng = ((number - du) * 60).toInt();
+    double miao = (((number - du) * 60 - feng) * 60);
+    return "${du.toString()}° ${feng.toString()}' ${miao.toStringAsFixed(1)}''";
   }
 }
