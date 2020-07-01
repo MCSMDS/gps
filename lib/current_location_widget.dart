@@ -27,7 +27,8 @@ class _LocationState extends State<CurrentLocationWidget> {
 
   _initCurrentLocation() async {
     Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
-    Position position = await geolocator.getCurrentPosition();
+    Position position = await geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.medium);
     if (mounted) {
       setState(() => _currentPosition = position);
     }
