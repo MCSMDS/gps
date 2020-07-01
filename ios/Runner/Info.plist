@@ -47,5 +47,7 @@
   <string>此应用程序在后台时需要访问位置。</string>
   <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
   <string>此应用程序在后台打开时需要访问位置。</string>
+  <key>EnableBackgroundLocationUpdates</key>
+	<true/>
 </dict>
 </plist>
