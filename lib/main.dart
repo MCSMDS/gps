@@ -16,7 +16,7 @@ class _LocationState extends State<CurrentLocationWidget> {
   @override
   void initState() {
     addtLocation();
-    timer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
+    timer = Timer.periodic(Duration(seconds: 5), (Timer timer) {
       addtLocation();
     });
     super.initState();
@@ -26,9 +26,10 @@ class _LocationState extends State<CurrentLocationWidget> {
     Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
     Position newposition = await geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.medium);
-    if (positions.last.longitude == newposition.longitude &&
-        positions.last.latitude == newposition.latitude &&
-        positions.last.altitude == newposition.altitude) return;
+    if (positions.length == 0 ||
+        (positions.last.longitude == newposition.longitude &&
+            positions.last.latitude == newposition.latitude &&
+            positions.last.altitude == newposition.altitude)) return;
     setState(() => positions.add(newposition));
   }
 
