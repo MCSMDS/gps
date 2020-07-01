@@ -49,7 +49,7 @@ class LocationStreamState extends State<LocationStreamWidget> {
           }
 
           if (snapshot.data == GeolocationStatus.denied) {
-            return PlaceholderWidget('位置服务已禁用', '使用设备设置为此应用启用位置服务。');
+            return Text('请允许此应用程序访问位置。');
           }
 
           return _buildListView();
@@ -75,31 +75,6 @@ class LocationStreamState extends State<LocationStreamWidget> {
     ).toList());
     return ListView(
       children: listItems,
-    );
-  }
-}
-
-class PlaceholderWidget extends StatelessWidget {
-  const PlaceholderWidget(this.title, this.message);
-
-  final String title;
-  final String message;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Text(title,
-              style: const TextStyle(fontSize: 32.0, color: Colors.black54),
-              textAlign: TextAlign.center),
-          Text(message,
-              style: const TextStyle(fontSize: 16.0, color: Colors.black54),
-              textAlign: TextAlign.center),
-        ],
-      ),
     );
   }
 }
