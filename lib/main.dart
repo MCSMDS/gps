@@ -10,29 +10,31 @@ class CurrentLocationWidget extends StatefulWidget {
 }
 
 class _LocationState extends State<CurrentLocationWidget> {
-  final List<Position> _positions = <Position>[];
-  Timer _timer;
+  List<Position> positions = <Position>[];
+  Timer timer;
 
   @override
   void initState() {
-    _initCurrentLocation();
-    _timer = Timer.periodic(Duration(seconds: 5), (Timer timer) {
-      _initCurrentLocation();
+    addtLocation();
+    timer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
+      addtLocation();
     });
     super.initState();
   }
 
-  _initCurrentLocation() async {
+  void addtLocation() async {
     Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
-    Position position = await geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.bestForNavigation);
-    setState(() => _positions.add(position));
+    Position newposition = await geolocator.getCurrentPosition();
+    if (positions.last.longitude == newposition.longitude ||
+        positions.last.latitude == newposition.latitude ||
+        positions.last.altitude == newposition.altitude) return;
+    setState(() => positions.add(newposition));
   }
 
   @override
   void dispose() {
-    _timer?.cancel();
-    _timer = null;
+    timer?.cancel();
+    timer = null;
     super.dispose();
   }
 
@@ -51,37 +53,32 @@ class _LocationState extends State<CurrentLocationWidget> {
         future: checkPermission(),
         builder:
             (BuildContext context, AsyncSnapshot<GeolocationStatus> snapshot) {
-          if (!snapshot.hasData || _positions.length == 0) {
+          if (!snapshot.hasData || positions.length == 0)
             return Center(child: CircularProgressIndicator());
-          }
 
-          if (snapshot.data == GeolocationStatus.denied) {
+          if (snapshot.data == GeolocationStatus.denied)
             return Text('请允许此应用程序访问位置。');
-          }
 
-          return _buildListView();
+          return _buildLocation();
         },
       ),
     );
   }
 
-  Widget _buildListView() {
-    List<Widget> listItems = <Widget>[];
-    listItems.addAll(_positions.map(
-      (Position position) {
-        return ListTile(
-          title: Column(
-            children: <Widget>[
-              Text('纬度: ${position.latitude}'),
-              Text('经度: ${position.longitude}'),
-              Text('时间: ${position.timestamp.toLocal().toString()}'),
-            ],
-          ),
-        );
-      },
-    ).toList());
-    return ListView(
-      children: listItems,
-    );
+  Widget _buildLocation() {
+    List<Widget> item = <Widget>[];
+    item.addAll(positions.map((Position position) {
+      return ListTile(
+        title: Row(
+          children: <Widget>[
+            Text('经度: ${position.longitude}'),
+            Text('纬度: ${position.latitude}'),
+            Text('海拔: ${position.altitude}'),
+            Text('时间: ${position.timestamp.toLocal().toString()}'),
+          ],
+        ),
+      );
+    }).toList());
+    return ListView(children: item);
   }
 }
