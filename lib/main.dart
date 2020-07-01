@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'current_location_widget.dart';
 import 'location_stream_widget.dart';
-import 'location_widget.dart';
 
 void main() => runApp(MaterialApp(home: GeolocatorExampleApp()));
 
@@ -31,17 +30,6 @@ class GeolocatorExampleApp extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (context) => CurrentLocationWidget(),
-              ),
-            );
-          },
-        ),
-        RaisedButton(
-          child: Text("单次"),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => CurrentLocationWidget2(),
               ),
             );
           },

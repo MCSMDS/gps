@@ -19,7 +19,7 @@ class _LocationState extends State<CurrentLocationWidget> {
   _initCurrentLocation() async {
     Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
     Position position = await geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+        desiredAccuracy: LocationAccuracy.bestForNavigation);
     setState(() => _currentPosition = position);
   }
 
@@ -33,7 +33,7 @@ class _LocationState extends State<CurrentLocationWidget> {
         future: Geolocator().checkGeolocationPermissionStatus(),
         builder:
             (BuildContext context, AsyncSnapshot<GeolocationStatus> snapshot) {
-          if (!snapshot.hasData) {
+          if (!snapshot.hasData || _currentPosition == null) {
             return Center(child: CircularProgressIndicator());
           }
 

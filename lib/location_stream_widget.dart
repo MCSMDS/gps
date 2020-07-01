@@ -16,7 +16,7 @@ class LocationStreamState extends State<LocationStreamWidget> {
   void initState() {
     Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
     LocationOptions option =
-        LocationOptions(accuracy: LocationAccuracy.medium, distanceFilter: 10);
+        LocationOptions(accuracy: LocationAccuracy.best, distanceFilter: 10);
     Stream<Position> stream = geolocator.getPositionStream(option);
     _positionStreamSubscription = stream.listen(
         (Position position) => setState(() => _positions.add(position)));
@@ -30,6 +30,11 @@ class LocationStreamState extends State<LocationStreamWidget> {
     super.dispose();
   }
 
+  Future<GeolocationStatus> checkPermission() async {
+    Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
+    return geolocator.checkGeolocationPermissionStatus();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +42,7 @@ class LocationStreamState extends State<LocationStreamWidget> {
         title: Text('GPS'),
       ),
       body: FutureBuilder<GeolocationStatus>(
-        future: Geolocator().checkGeolocationPermissionStatus(),
+        future: checkPermission(),
         builder:
             (BuildContext context, AsyncSnapshot<GeolocationStatus> snapshot) {
           if (!snapshot.hasData) {
