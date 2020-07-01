@@ -29,6 +29,11 @@ class LocationStreamState extends State<LocationStreamWidget> {
     super.dispose();
   }
 
+  Future<GeolocationStatus> checkPermission() {
+    Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
+    return geolocator.checkGeolocationPermissionStatus();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +41,7 @@ class LocationStreamState extends State<LocationStreamWidget> {
         title: Text('GPS'),
       ),
       body: FutureBuilder<GeolocationStatus>(
-        future: Geolocator().checkGeolocationPermissionStatus(),
+        future: checkPermission(),
         builder:
             (BuildContext context, AsyncSnapshot<GeolocationStatus> snapshot) {
           if (!snapshot.hasData) {
