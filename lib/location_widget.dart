@@ -12,28 +12,15 @@ class _LocationState extends State<CurrentLocationWidget2> {
 
   @override
   void initState() {
+    _initCurrentLocation();
     super.initState();
-    _initCurrentLocation();
   }
 
-  @override
-  void didUpdateWidget(Widget oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    setState(() {
-      _currentPosition = null;
-    });
-    _initCurrentLocation();
-  }
-
-  _initCurrentLocation() {
-    Geolocator()
-      ..forceAndroidLocationManager = true
-      ..getCurrentPosition(desiredAccuracy: LocationAccuracy.medium)
-          .then((position) {
-        if (mounted) {
-          setState(() => _currentPosition = position);
-        }
-      });
+  _initCurrentLocation() async {
+    Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
+    Position position = await geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.best);
+    setState(() => _currentPosition = position);
   }
 
   @override
@@ -47,7 +34,7 @@ class _LocationState extends State<CurrentLocationWidget2> {
         builder:
             (BuildContext context, AsyncSnapshot<GeolocationStatus> snapshot) {
           if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
+            return Center(child: CircularProgressIndicator());
           }
 
           if (snapshot.data == GeolocationStatus.denied) {

@@ -15,7 +15,9 @@ class LocationStreamState extends State<LocationStreamWidget> {
   @override
   void initState() {
     Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
-    Stream<Position> stream = geolocator.getPositionStream();
+    LocationOptions option =
+        LocationOptions(accuracy: LocationAccuracy.high, distanceFilter: 10);
+    Stream<Position> stream = geolocator.getPositionStream(option);
     _positionStreamSubscription = stream.listen(
         (Position position) => setState(() => _positions.add(position)));
     super.initState();

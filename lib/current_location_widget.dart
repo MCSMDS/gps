@@ -16,22 +16,11 @@ class _LocationState extends State<CurrentLocationWidget> {
     super.initState();
   }
 
-  @override
-  void didUpdateWidget(Widget oldWidget) {
-    setState(() {
-      _currentPosition = null;
-    });
-    _initCurrentLocation();
-    super.didUpdateWidget(oldWidget);
-  }
-
   _initCurrentLocation() async {
     Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
     Position position = await geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.medium);
-    if (mounted) {
-      setState(() => _currentPosition = position);
-    }
+        desiredAccuracy: LocationAccuracy.bestForNavigation);
+    setState(() => _currentPosition = position);
   }
 
   @override
