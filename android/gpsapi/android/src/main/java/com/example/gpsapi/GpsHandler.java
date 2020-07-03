@@ -22,7 +22,7 @@ class GpsHandler implements LocationListener {
     void handleGps() {
         Criteria criteria = new Criteria();
         criteria.setAccuracy(Criteria.ACCURACY_FINE);
-        criteria.setAltitudeRequired(false);
+        criteria.setAltitudeRequired(true);
         criteria.setCostAllowed(true);
         locationManager.requestSingleUpdate(criteria, this, Looper.getMainLooper());
     }
@@ -33,7 +33,7 @@ class GpsHandler implements LocationListener {
         Map<String, Object> map = new HashMap<>();
         map.put("latitude", location.getLatitude());
         map.put("longitude", location.getLongitude());
-        map.put("altitude",location.getAltitude());
+        map.put("altitude", location.getAltitude());
         map.put("timestamp", location.getTime());
         gpsPlugin.setResult(map);
     }
