@@ -30,12 +30,12 @@ class _LocationState extends State<CurrentLocationWidget> {
       'timestamp': newposition1.timestamp,
     };
     addtLocation();
-    if (positions.length != 0) {
+/*     if (positions.length != 0) {
       if (positions.last['timestamp'] == position['timestamp']) return;
       if (positions.last['longitude'] == position['longitude'] &&
           positions.last['latitude'] == position['latitude'] &&
           positions.last['altitude'] == position['altitude']) return;
-    }
+    } */
     setState(() => positions.add(position));
   }
 
