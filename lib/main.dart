@@ -12,14 +12,10 @@ class CurrentLocationWidget extends StatefulWidget {
 
 class _LocationState extends State<CurrentLocationWidget> {
   List<Map> positions = <Map>[];
-  Timer timer;
 
   @override
   void initState() {
     addtLocation();
-    timer = Timer.periodic(Duration(seconds: 5), (Timer timer) {
-      addtLocation();
-    });
     super.initState();
   }
 
@@ -33,18 +29,14 @@ class _LocationState extends State<CurrentLocationWidget> {
       'altitude': newposition1.altitude,
       'timestamp': newposition1.timestamp,
     };
-    if (positions.length != 0 &&
-        positions.last['longitude'] == position['longitude'] &&
-        positions.last['latitude'] == position['latitude'] &&
-        positions.last['altitude'] == position['altitude']) return;
+    addtLocation();
+    if (positions.length != 0) {
+      if (positions.last['timestamp'] == position['timestamp']) return;
+      if (positions.last['longitude'] == position['longitude'] &&
+          positions.last['latitude'] == position['latitude'] &&
+          positions.last['altitude'] == position['altitude']) return;
+    }
     setState(() => positions.add(position));
-  }
-
-  @override
-  void dispose() {
-    timer?.cancel();
-    timer = null;
-    super.dispose();
   }
 
   Future<GeolocationStatus> checkPermission() {
@@ -83,7 +75,7 @@ class _LocationState extends State<CurrentLocationWidget> {
           children: <Widget>[
             Text('经度: ${dd2dms(position['longitude'])}'),
             Text('纬度: ${dd2dms(position['latitude'])}'),
-            Text('海拔: ${position['altitude']}'),
+            Text('海拔: ${position['altitude'].toStringAsFixed(2)}'),
             Text('时间: ${position['timestamp'].toLocal().toString()}'),
           ],
         ),
